@@ -1,12 +1,35 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useFilterContext } from '../context/filter_context'
-import { getUniqueValues, formatPrice } from '../utils/helpers'
-import { FaCheck } from 'react-icons/fa'
+import React from "react";
+import styled from "styled-components";
+import { useFilterContext } from "../context/filter_context";
+import { getUniqueValues, formatPrice } from "../utils/helpers";
+import { FaCheck } from "react-icons/fa";
 
 const Filters = () => {
-  return <h4>filters</h4>
-}
+  const {
+    filters: { text, category, company, colors },
+    updateFilters,
+    allProducts,
+  } = useFilterContext();
+
+  const categories = getUniqueValues(allProducts, "category");
+  const companies = getUniqueValues(allProducts, "company");
+  const allColors = getUniqueValues(allProducts, "colors");
+
+  return (
+    <Wrapper>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <input
+          type="text"
+          name="text"
+          className="search-input"
+          placeholder="Search"
+          value={text}
+          onChange={updateFilters}
+        />
+      </form>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.section`
   .form-control {
@@ -106,6 +129,6 @@ const Wrapper = styled.section`
       top: 1rem;
     }
   }
-`
+`;
 
-export default Filters
+export default Filters;
