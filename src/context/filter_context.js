@@ -21,10 +21,10 @@ const initialState = {
     text: "",
     category: "all",
     company: "all",
-    colors: "all",
+    color: "all",
     min_price: 0,
-    max_price: 0,
-    price: 0,
+    max_price: 400000,
+    price: 400000,
     free_shipping: false,
   },
 };
@@ -58,13 +58,37 @@ export const FilterProvider = ({ children }) => {
 
   const updateFilters = (e) => {
     const name = e.target.name;
-    const value = e.target.value;
+    let value = e.target.value;
+    if (name === "category") {
+      value = e.target.textContent;
+    }
+    if (name === "color") {
+      value = e.target.dataset.color;
+    }
+    if (name === "price") {
+      value = Number(value);
+    }
+    if (name === "free_shipping") {
+      value = e.target.checked;
+    }
+    console.log(name, value);
     dispatch({ type: UPDATE_FILTERS, payload: { name, value } });
+  };
+
+  const clearFilters = () => {
+    dispatch({ type: CLEAR_FILTERS });
   };
 
   return (
     <FilterContext.Provider
-      value={{ ...state, setListView, setGridView, updateSort, updateFilters }}
+      value={{
+        ...state,
+        setListView,
+        setGridView,
+        updateSort,
+        updateFilters,
+        clearFilters,
+      }}
     >
       {children}
     </FilterContext.Provider>

@@ -6,9 +6,19 @@ import { FaCheck } from "react-icons/fa";
 
 const Filters = () => {
   const {
-    filters: { text, category, company, colors },
+    filters: {
+      text,
+      category,
+      company,
+      color,
+      min_price,
+      max_price,
+      price,
+      free_shipping,
+    },
     updateFilters,
     allProducts,
+    clearFilters,
   } = useFilterContext();
 
   const categories = getUniqueValues(allProducts, "category");
@@ -18,15 +28,110 @@ const Filters = () => {
   return (
     <Wrapper>
       <form onSubmit={(e) => e.preventDefault()}>
-        <input
-          type="text"
-          name="text"
-          className="search-input"
-          placeholder="Search"
-          value={text}
-          onChange={updateFilters}
-        />
+        <div className="form-control">
+          <input
+            type="text"
+            name="text"
+            className="search-input"
+            placeholder="Search"
+            value={text}
+            onChange={updateFilters}
+          />
+        </div>
+        <div className="form-control">
+          <h5>Categories</h5>
+          <div>
+            {categories.map((c, index) => {
+              return (
+                <button
+                  onClick={updateFilters}
+                  name="category"
+                  key={index}
+                  className={`${c === category ? "active" : null}`}
+                >
+                  {c}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="form-control">
+          <h5>Company</h5>
+          <select
+            name="company"
+            id="company"
+            onClick={updateFilters}
+            className="company"
+          >
+            {companies.map((comp, index) => {
+              return (
+                <option value={comp} key={index}>
+                  {comp}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div className="form-control">
+          <h5>Colors</h5>
+          <div className="colors">
+            {allColors.map((c, index) => {
+              if (c === "all") {
+                return (
+                  <button
+                    className={`all-btn ${c === color ? "active" : null}`}
+                    key={index}
+                    name="color"
+                    data-color="all"
+                    onClick={updateFilters}
+                  >
+                    {c}
+                  </button>
+                );
+              }
+              return (
+                <button
+                  className={`color-btn ${c === color ? "active" : null}`}
+                  style={{ background: c }}
+                  name="color"
+                  key={index}
+                  onClick={updateFilters}
+                  data-color={c}
+                >
+                  {c === color && <FaCheck />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="form-control">
+          <h5>Price</h5>
+          <div className="price">{formatPrice(price)}</div>
+          <input
+            type="range"
+            onChange={updateFilters}
+            min={min_price}
+            max={max_price}
+            value={price}
+            name="price"
+          />
+        </div>
+        <div className="form-control">
+          <div className="shipping">
+            <label htmlFor="shipping">Free shipping</label>
+            <input
+              type="checkbox"
+              name="free_shipping"
+              id="shipping"
+              checked={free_shipping}
+              onChange={updateFilters}
+            />
+          </div>
+        </div>
       </form>
+      <button className="clear-btn" onClick={clearFilters}>
+        clear filters
+      </button>
     </Wrapper>
   );
 };
